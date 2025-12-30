@@ -17,6 +17,9 @@ export default function DriverPrivacy() {
                     <p className="text-sm text-blue-700">
                         Cabigo Driver Partner collects location data to enable <strong>trip tracking, distance calculation, and efficient ride dispatching</strong> even when the app is closed or not in use. This data is essential for calculating fair fares and ensuring passenger safety during active trips.
                     </p>
+                    <p className="text-sm text-blue-700 mt-2">
+                        By registering for this mobile application, the driver accepts location tracking after they manually tap &quot;Go-Online&quot; to receive business benefits from Cabigo.
+                    </p>
                 </div>
 
                 <div>
