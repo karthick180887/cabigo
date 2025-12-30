@@ -1,0 +1,535 @@
+{
+  "queries": [
+    "one way taxi chennai",
+    "drop taxi chennai",
+    "one way taxi tamil nadu",
+    "drop taxi tamil nadu",
+    "one way taxi coimbatore",
+    "one way taxi madurai",
+    "one way taxi trichy",
+    "one way taxi salem",
+    "one way taxi pondicherry",
+    "one way taxi bangalore to chennai",
+    "one way taxi coimbatore to ooty",
+    "drop taxi tirupati",
+    "one way taxi tirupati",
+    "one way taxi kerala",
+    "one way taxi karnataka",
+    "one way taxi andhra pradesh",
+    "one way taxi telangana"
+  ],
+  "seedKeywords": [
+    "one way taxi",
+    "drop taxi",
+    "one way cab",
+    "outstation taxi",
+    "one way taxi chennai",
+    "one way taxi coimbatore",
+    "one way taxi madurai",
+    "one way taxi trichy",
+    "one way taxi salem",
+    "one way taxi bangalore",
+    "one way taxi kerala",
+    "one way taxi karnataka",
+    "one way taxi andhra pradesh",
+    "one way taxi telangana",
+    "drop taxi chennai",
+    "drop taxi coimbatore",
+    "drop taxi madurai"
+  ],
+  "competitors": {
+    "onewaydroptaxi.com": [
+      "https://onewaydroptaxi.com/"
+    ],
+    "makemytrip.com": [
+      "https://www.makemytrip.com/car-rental/pondicherry-city-cabs.html",
+      "https://www.makemytrip.com/car-rental/bangalore-chennai-cab-services.html",
+      "https://www.makemytrip.com/car-rental/coimbatore-ooty-cab-services.html"
+    ],
+    "droptaxi.in": [
+      "https://www.droptaxi.in/",
+      "https://droptaxi.in/tariff.php"
+    ],
+    "redtaxi.co.in": [
+      "https://www.redtaxi.co.in/oneway-trip",
+      "https://www.redtaxi.co.in/madurai-cab-booking",
+      "https://www.redtaxi.co.in/salem-cab-booking"
+    ],
+    "go2onewaytaxi.com": [
+      "https://go2onewaytaxi.com/",
+      "https://go2onewaytaxi.com/drop-taxi-in-trichy/",
+      "https://www.go2onewaytaxi.com/"
+    ],
+    "ssdroptaxi.com": [
+      "https://ssdroptaxi.com/",
+      "https://ssdroptaxi.com/coimbatore-drop-taxi",
+      "https://ssdroptaxi.com/madurai-one-way-cabs"
+    ],
+    "oneway.cab": [
+      "https://oneway.cab/coimbatore-airport/coimbatore-airport-to-ooty-taxi.html",
+      "https://oneway.cab/",
+      "https://oneway.cab/advantages.html"
+    ],
+    "onewaycalltaxi.in": [
+      "https://onewaycalltaxi.in/",
+      "https://onewaycalltaxi.in/madurai.html",
+      "https://www.onewaycalltaxi.in/trichy.html"
+    ],
+    "quickride.in": [
+      "https://quickride.in/outstation-taxi-chennai.php",
+      "https://quickride.in/bangalore-to-chennai-cabs.php",
+      "https://quickride.in/taxi/Bengaluru.php"
+    ],
+    "hurryupcabs.com": [
+      "https://hurryupcabs.com/outstation/coimbatore-to-ooty",
+      "https://hurryupcabs.com/state/cab-service-in-kerala",
+      "https://hurryupcabs.com/state/cab-service-in-telangana"
+    ],
+    "onewaytaxi.com": [
+      "https://onewaytaxi.com/"
+    ],
+    "5starcalltaxi.com": [
+      "https://www.5starcalltaxi.com/tirupati-drop-taxi/"
+    ],
+    "cabbazar.com": [
+      "https://cabbazar.com/one-way-cab-in-kerala",
+      "https://cabbazar.com/one-way-cab-in-bangalore"
+    ],
+    "droptaximadurai.in": [
+      "http://droptaximadurai.in/"
+    ],
+    "droptaxiservice.info": [
+      "https://www.droptaxiservice.info/"
+    ],
+    "goibibo.com": [
+      "https://www.goibibo.com/cars/bangalore-to-chennai-cabs/",
+      "https://www.goibibo.com/cars/"
+    ],
+    "savaari.com": [
+      "https://www.savaari.com/bangalore/bangalore-to-chennai-cabs",
+      "https://www.savaari.com/coimbatore/coimbatore-to-ooty-cabs"
+    ],
+    "taxida.in": [
+      "https://taxida.in/one-way-taxi/chennai",
+      "https://taxida.in/one-way-taxi/tiruchirappalli"
+    ],
+    "taxiintirupati.com": [
+      "https://www.taxiintirupati.com/"
+    ],
+    "tirupaticabsandcarrentals.com": [
+      "https://tirupaticabsandcarrentals.com/"
+    ],
+    "chennaidroptaxi.com": [
+      "http://www.chennaidroptaxi.com/"
+    ],
+    "comfortonewaytaxi.com": [
+      "https://www.comfortonewaytaxi.com/"
+    ],
+    "droptaxi.net": [
+      "https://www.droptaxi.net/"
+    ],
+    "droptaxicoimbatore.com": [
+      "http://droptaxicoimbatore.com/"
+    ],
+    "droptaxiinoneway.com": [
+      "https://droptaxiinoneway.com/"
+    ],
+    "fasttrackcalltaxi.in": [
+      "https://fasttrackcalltaxi.in/services/outstation-one-way-drop-taxi"
+    ],
+    "gogocabs.com": [
+      "https://www.gogocabs.com/"
+    ],
+    "intercityriders.com": [
+      "https://intercityriders.com/"
+    ],
+    "iwaycabs.com": [
+      "https://iwaycabs.com/"
+    ],
+    "justdial.com": [
+      "https://www.justdial.com/Coimbatore/Taxi-Services/nct-10472932"
+    ],
+    "maduraifriendstrackcalltaxi.com": [
+      "https://maduraifriendstrackcalltaxi.com/"
+    ],
+    "maduraionewaycab.in": [
+      "http://www.maduraionewaycab.in/"
+    ],
+    "onedropcab.com": [
+      "https://onedropcab.com/"
+    ],
+    "onetriptaxi.com": [
+      "http://onetriptaxi.com/"
+    ],
+    "onewaydroptaxisalem.com": [
+      "https://onewaydroptaxisalem.com/"
+    ],
+    "onewaytravels.in": [
+      "http://www.onewaytravels.in/"
+    ],
+    "pondicherryonewaytaxi.com": [
+      "https://www.pondicherryonewaytaxi.com/"
+    ],
+    "salemonewaytaxi.in": [
+      "https://salemonewaytaxi.in/"
+    ],
+    "tirumalatirupaticabs.in": [
+      "https://www.tirumalatirupaticabs.in/"
+    ],
+    "tirupatibalajicabs.com": [
+      "http://tirupatibalajicabs.com/"
+    ],
+    "trichydroptaxi.com": [
+      "https://trichydroptaxi.com/"
+    ],
+    "trichyonewaytaxi.com": [
+      "https://trichyonewaytaxi.com/"
+    ],
+    "uber.com": [
+      "https://www.uber.com/in/en/r/intercity/bangalore-karnataka-to-chennai-tamil-nadu/"
+    ]
+  },
+  "perQueryTopUrls": {
+    "one way taxi chennai": [
+      "https://onewaydroptaxi.com/?srsltid=AfmBOorRoQJocW8TJeTMO7tulVk8tKnat-bvLLy_17DeRDg6wvxno9-L",
+      "https://www.onewaydroptaxi.com/chennai.html",
+      "https://www.onewaydroptaxi.com/chennai-to-trichy-one-way-taxi-service.html",
+      "https://onewaydroptaxi.com/tariff.html",
+      "https://www.onewaydroptaxi.com/trichy.html",
+      "https://www.droptaxi.in/",
+      "https://onewaytaxi.com/",
+      "https://iwaycabs.com/",
+      "https://onewaycalltaxi.in/",
+      "https://quickride.in/outstation-taxi-chennai.php"
+    ],
+    "drop taxi chennai": [
+      "https://droptaxi.in/tariff.php",
+      "https://www.droptaxi.in/?p=1",
+      "https://droptaxi.in/contact-us.php",
+      "https://www.droptaxi.in/login.php",
+      "https://www.droptaxi.in/register.php",
+      "https://www.droptaxi.in/",
+      "https://www.droptaxiservice.info/",
+      "http://www.chennaidroptaxi.com/",
+      "https://onewaydroptaxi.com/?srsltid=AfmBOoo-XHGrWDtHCS7yJic2ZlapEIa163ul5hsNK5WsXXUmK5eUjtoJ",
+      "https://fasttrackcalltaxi.in/services/outstation-one-way-drop-taxi"
+    ],
+    "one way taxi tamil nadu": [
+      "https://onewaydroptaxi.com/?srsltid=AfmBOorBlbURUpG0T7Pp1hnrD3CiPEYbS24__lyBIYZBmn9cLYVeSzni",
+      "https://www.onewaydroptaxi.com/chennai.html",
+      "https://onewaydroptaxi.com/bangalore.html",
+      "https://onewaydroptaxi.com/tariff.html",
+      "https://www.onewaydroptaxi.com/trichy.html",
+      "https://www.droptaxi.in/",
+      "https://go2onewaytaxi.com/",
+      "https://taxida.in/one-way-taxi/chennai",
+      "https://taxida.in/one-way-taxi/chennai-mayiladuthurai-taxi",
+      "https://taxida.in/one-way-taxi/chennai-ranipet-taxi"
+    ],
+    "drop taxi tamil nadu": [
+      "https://droptaxi.in/tariff.php",
+      "https://www.droptaxi.in/?p=1",
+      "https://droptaxi.in/contact-us.php",
+      "https://droptaxi.in/users_mybooking.php",
+      "https://www.droptaxi.in/https://www.droptaxi.in/",
+      "https://www.droptaxi.in/",
+      "http://droptaximadurai.in/",
+      "https://www.droptaxiservice.info/",
+      "https://onewaydroptaxi.com/?srsltid=AfmBOooBYzWLBtmq012kde235utj1I5GWpRpRGvF-htVvjF9y7tJxz6E",
+      "https://go2onewaytaxi.com/"
+    ],
+    "one way taxi coimbatore": [
+      "http://droptaxicoimbatore.com/",
+      "https://onewaycalltaxi.in/",
+      "https://intercityriders.com/",
+      "https://www.redtaxi.co.in/oneway-trip",
+      "https://ssdroptaxi.com/coimbatore-drop-taxi",
+      "https://onewaydroptaxi.com/?srsltid=AfmBOop_Akb22OH-rP_RSFyRcWka4O8SYRNXLbYzEjBKgu_XXTi5pwEm",
+      "https://www.onewaydroptaxi.com/coimbatore.html",
+      "https://www.onewaydroptaxi.com/chennai-to-coimbatore-one-way-taxi-service.html",
+      "https://www.onewaydroptaxi.com/coimbatore-to-salem-one-way-taxi-service.html",
+      "https://taxida.in/one-way-taxi/coimbatore"
+    ],
+    "one way taxi madurai": [
+      "http://www.maduraionewaycab.in/",
+      "http://droptaximadurai.in/",
+      "https://maduraifriendstrackcalltaxi.com/",
+      "https://onewaycalltaxi.in/madurai.html",
+      "https://www.redtaxi.co.in/madurai-cab-booking",
+      "https://ssdroptaxi.com/madurai-one-way-cabs",
+      "https://ssdroptaxi.com/madurai/madurai-to-tirunelveli-one-way-call-taxi",
+      "https://ssdroptaxi.com/madurai/madurai-to-kumbakonam-taxi-fare",
+      "https://www.srtcarrentals.com/",
+      "https://www.srtcarrentals.com/outstation_taxi"
+    ],
+    "one way taxi trichy": [
+      "https://ssdroptaxi.com/trichy-one-way-taxi",
+      "https://ssdroptaxi.com/trichy/trichy-to-velankanni-taxi",
+      "https://ssdroptaxi.com/trichy/trichy-to-devakottai-drop-taxi",
+      "https://ssdroptaxi.com/trichy/trichy-to-kovilpatti-taxi",
+      "https://trichyonewaytaxi.com/",
+      "https://www.onewaycalltaxi.in/trichy.html",
+      "https://trichydroptaxi.com/",
+      "https://taxida.in/one-way-taxi/tiruchirappalli",
+      "https://go2onewaytaxi.com/drop-taxi-in-trichy/",
+      "https://www.redtaxi.co.in/trichy-cab-booking"
+    ],
+    "one way taxi salem": [
+      "http://www.onewaytravels.in/",
+      "https://www.go2onewaytaxi.com/",
+      "https://onedropcab.com/",
+      "https://www.redtaxi.co.in/salem-cab-booking",
+      "https://salemonewaytaxi.in/",
+      "https://onewaydroptaxisalem.com/",
+      "https://go2onewaytaxi.com/drop-taxi-in-salem/",
+      "https://ssdroptaxi.com/car-rental-salem",
+      "https://mangoonewaydroptaxi.com/"
+    ],
+    "one way taxi pondicherry": [
+      "https://www.pondicherryonewaytaxi.com/",
+      "https://www.makemytrip.com/car-rental/pondicherry-city-cabs.html",
+      "https://www.comfortonewaytaxi.com/",
+      "https://www.droptaxi.net/",
+      "https://go2onewaytaxi.com/drop-taxi-in-pondicherry/",
+      "https://onewaydroptaxi.com/?srsltid=AfmBOoqie-Y2OFDHPabR0jw2sCg5xtCXgdMvl33EhNmNEJAOjLTYT2po",
+      "https://www.onewaydroptaxi.com/chennai-to-pondicherry-one-way-taxi-service.html",
+      "https://www.onewaydroptaxi.com/pondicherry.html",
+      "https://www.onewaydroptaxi.com/chennai-to-coimbatore-one-way-taxi-service.html",
+      "https://www.onewaydroptaxi.com/madurai.html"
+    ],
+    "one way taxi bangalore to chennai": [
+      "https://www.makemytrip.com/car-rental/bangalore-chennai-cab-services.html",
+      "https://www.uber.com/in/en/r/intercity/bangalore-karnataka-to-chennai-tamil-nadu/",
+      "https://quickride.in/bangalore-to-chennai-cabs.php",
+      "https://www.savaari.com/bangalore/bangalore-to-chennai-cabs",
+      "https://www.onewaydroptaxi.com/bangalore-to-chennai-one-way-taxi-service.html?srsltid=AfmBOop_EyVQaArpCuZP9r73CZ5sciiWSc-8faFazhoX-anEn97OtdkQ",
+      "https://www.goibibo.com/cars/bangalore-to-chennai-cabs/",
+      "https://www.droptaxi.in/",
+      "https://www.droptaxi.in/major-routes.php",
+      "https://droptaxi.in/tariff.php",
+      "https://www.droptaxi.in/login.php"
+    ],
+    "one way taxi coimbatore to ooty": [
+      "https://www.makemytrip.com/car-rental/coimbatore-ooty-cab-services.html",
+      "https://hurryupcabs.com/outstation/coimbatore-to-ooty",
+      "https://www.redtaxi.co.in/coimbatore-cab-booking",
+      "https://www.justdial.com/Coimbatore/Taxi-Services/nct-10472932",
+      "https://www.savaari.com/coimbatore/coimbatore-to-ooty-cabs",
+      "https://oneway.cab/coimbatore-airport/coimbatore-airport-to-ooty-taxi.html",
+      "https://www.goibibo.com/cars/coimbatore-to-ooty-cabs/",
+      "http://www.ootycabservice.com/coimbatore-to-ooty-taxi-fare/",
+      "https://www.gtccabs.com/cabs/coimbatore-to-ooty-cabs"
+    ],
+    "drop taxi tirupati": [
+      "https://droptaxi.in/tariff.php",
+      "https://www.droptaxi.in/?p=1",
+      "https://droptaxi.in/contact-us.php",
+      "https://tirupaticabsandcarrentals.com/",
+      "https://www.taxiintirupati.com/",
+      "https://www.tirumalatirupaticabs.in/",
+      "https://www.5starcalltaxi.com/tirupati-drop-taxi/",
+      "https://onewaydroptaxi.com/?srsltid=AfmBOoqGduBBFt6kyUZjgjLUcxVu4c5CERF6hzNvSFfBfFRIQSch5cwo",
+      "https://onedropcab.com/one-drop-cab-in-tirupati.php",
+      "https://yazhldroptaxi.com/drop-taxi-tirupati/"
+    ],
+    "one way taxi tirupati": [
+      "http://tirupatibalajicabs.com/",
+      "https://www.taxiintirupati.com/",
+      "https://tirupaticabsandcarrentals.com/",
+      "https://www.makemytrip.com/car-rental/tirupati-city-cabs.html",
+      "https://www.taxiintirupati.com/tirupati-travel-package.html",
+      "https://www.taxiintirupati.com/tirupati-airport-taxi.html",
+      "https://www.taxiintirupati.com/car-rentals-in-tirupati.html",
+      "https://www.droptaxi.in/",
+      "https://www.5starcalltaxi.com/tirupati-drop-taxi/",
+      "http://www.nationaltaxi.ae/auh/Tariff.html"
+    ],
+    "one way taxi kerala": [
+      "https://cabbazar.com/one-way-cab-in-kerala",
+      "https://hurryupcabs.com/state/cab-service-in-kerala",
+      "https://www.redtaxi.co.in/",
+      "https://onewaydroptaxi.com/?srsltid=AfmBOoqAgfgUXaWqUZkZCdeNzbXD1rjEpoi-huRinRfRE_7oSi3THJaC",
+      "https://onewaydroptaxi.com/tariff.html",
+      "https://www.onewaydroptaxi.com/coimbatore.html",
+      "https://www.onewaydroptaxi.com/chennai-to-coimbatore-one-way-taxi-service.html",
+      "https://www.onewaydroptaxi.com/outstation-taxi.html",
+      "https://www.droptaxi.in/",
+      "https://droptaxi.in/tariff.php"
+    ],
+    "one way taxi karnataka": [
+      "https://www.gogocabs.com/",
+      "https://oneway.cab/",
+      "https://www.makemytrip.com/car-rental/one-way-cab.html",
+      "https://quickride.in/taxi/Bengaluru.php",
+      "https://onewaydroptaxi.com/",
+      "https://cabbazar.com/one-way-cab-in-bangalore",
+      "https://hurryupcabs.com/state/cab-service-in-karnataka",
+      "https://www.deepamcabs.com/outstation-one-way-cab.html",
+      "https://onewaydroptaxi.com/?srsltid=AfmBOop1sydd4pA8p__ROa0lL5O64ePZomct3mgYymqipZnO1wrxlJ-q",
+      "https://onewaydroptaxi.com/bangalore.html"
+    ],
+    "one way taxi andhra pradesh": [
+      "https://onewaytaxi.com/",
+      "http://onetriptaxi.com/",
+      "https://oneway.cab/advantages.html",
+      "https://oneway.cab/pune/pune-to-mumbai-taxi.html",
+      "https://oneway.cab/outstation.php",
+      "https://oneway.cab/services.html",
+      "https://www.redtaxi.co.in/",
+      "https://www.makemytrip.com/cabs/",
+      "https://www.makemytrip.com/car-rental/one-way-cab.html",
+      "https://www.makemytrip.com/car-rental/jaipur-city-cabs.html"
+    ],
+    "one way taxi telangana": [
+      "https://oneway.cab/hyderabad/hyderabad-to--taxi.html",
+      "https://quickride.in/outstation-taxi-hyderabad.php",
+      "https://www.goibibo.com/cars/",
+      "https://www.goibibo.com/cars/cab-from-hyderabad/",
+      "https://www.goibibo.com/cars/airport-cabs/",
+      "https://www.goibibo.com/cars/cab-from-goa/",
+      "https://www.goibibo.com/cars/rental-cabs/",
+      "https://www.makemytrip.com/car-rental/hyderabad-city-cabs.html",
+      "https://hurryupcabs.com/state/cab-service-in-telangana",
+      "https://onewaydroptaxi.com/?srsltid=AfmBOoolOiJfsmzwzxkd28rHkgQdo-alX5HpGOSFEYd_M6oIM8qpZOJD"
+    ]
+  },
+  "suggestedKeywords": [
+    "one way taxi salem",
+    "one way taxi",
+    "one way taxi chennai",
+    "one way taxi madurai",
+    "one way taxi coimbatore",
+    "one way taxi trichy",
+    "one way taxi service",
+    "one way taxi booking",
+    "one way taxi chennai airport",
+    "one way taxi vellore",
+    "drop taxi",
+    "drop taxi salem",
+    "drop taxi coimbatore",
+    "drop taxi chennai",
+    "drop taxi trichy",
+    "drop taxi madurai",
+    "drop taxi cab",
+    "drop taxi vellore",
+    "drop taxi near me",
+    "drop taxi contact number",
+    "one way cab",
+    "one way cab booking",
+    "one way cab chennai",
+    "one way cab meaning",
+    "one way cab service",
+    "one way cab from chennai to bangalore",
+    "one way cab madurai",
+    "one way cab facility means",
+    "one way cab ahmedabad",
+    "one way cab delhi",
+    "outstation taxi",
+    "outstation taxi chennai",
+    "outstation taxi service",
+    "outstation taxi booking",
+    "outstation taxi service near me",
+    "outstation taxi service delhi",
+    "outstation taxi service pune",
+    "outstation taxi in delhi",
+    "outstation taxi in bangalore",
+    "outstation taxi booking app",
+    "one way taxi chennai to bangalore",
+    "one way taxi chennai to trichy",
+    "one way taxi chennai contact number",
+    "one way taxi chennai to madurai",
+    "one way taxi chennai to pondicherry",
+    "one way taxi chennai to vellore",
+    "one way taxi chennai to kumbakonam",
+    "one way taxi chennai to tirupati",
+    "one way taxi coimbatore to salem",
+    "one way taxi coimbatore to chennai",
+    "one way taxi coimbatore to bangalore",
+    "one way taxi coimbatore to madurai",
+    "one way taxi coimbatore to ooty",
+    "one way taxi coimbatore to erode",
+    "one way cab coimbatore to trichy",
+    "one way cab coimbatore to kochi",
+    "one way drop taxi coimbatore",
+    "one way taxi madurai to rameshwaram",
+    "one way taxi madurai to chennai",
+    "one way taxi madurai price list",
+    "one way taxi madurai contact number",
+    "one way taxi madurai to bangalore",
+    "one way taxi madurai to trichy",
+    "one way taxi madurai price",
+    "one way drop taxi madurai",
+    "one way drop taxi madurai to chennai",
+    "one way taxi trichy to chennai",
+    "one way taxi trichy to madurai",
+    "one way drop taxi trichy",
+    "one way drop taxi trichy to chennai",
+    "one way drop taxi trichy to madurai",
+    "one way drop taxi trichy to coimbatore",
+    "one way taxi from trichy airport",
+    "one way drop taxi trichy to kumbakonam",
+    "one way taxi from trichy to bangalore",
+    "one way taxi salem to chennai",
+    "one way taxi salem to bangalore",
+    "one way taxi salem to coimbatore",
+    "one way drop taxi salem",
+    "one way drop taxi salem to coimbatore",
+    "one way drop taxi salem to chennai",
+    "one way drop taxi salem price",
+    "one way drop taxi salem to bangalore",
+    "one way call taxi salem",
+    "one way taxi bangalore",
+    "one way taxi bangalore to chennai",
+    "one way taxi bangalore to coimbatore",
+    "one way taxi bangalore to salem",
+    "one way taxi bangalore to mysore",
+    "one way taxi bangalore to madurai",
+    "one way taxi bangalore to vellore",
+    "one way taxi bangalore to pondicherry",
+    "one way taxi bangalore to trichy",
+    "one way taxi bangalore to erode",
+    "one way taxi kerala",
+    "one way drop taxi kerala",
+    "one way taxi tariff",
+    "one way taxi service near me",
+    "one way cab owner",
+    "how to calculate taxi fare in kerala",
+    "one way drop taxi fare",
+    "one way taxi karnataka",
+    "one way drop taxi karnataka",
+    "one way drop taxi near bengaluru karnataka",
+    "one way cab customer care",
+    "one way cab contact number",
+    "one way taxi hyderabad",
+    "one way drop taxi hyderabad",
+    "one way taxi from hyderabad to bangalore",
+    "one way taxi from hyderabad to srisailam",
+    "drop taxi chennai contact number",
+    "drop taxi chennai to trichy",
+    "drop taxi chennai to bangalore",
+    "drop taxi chennai to madurai",
+    "drop taxi chennai to pondicherry",
+    "drop taxi chennai to coimbatore",
+    "drop taxi chennai to bangalore price",
+    "drop taxi chennai to salem",
+    "drop taxi chennai reviews",
+    "drop taxi coimbatore to chennai",
+    "drop taxi coimbatore to trichy",
+    "drop taxi coimbatore contact number",
+    "drop taxi coimbatore to bangalore",
+    "drop taxi coimbatore to madurai",
+    "drop taxi coimbatore to erode",
+    "drop taxi coimbatore price",
+    "drop taxi coimbatore to salem",
+    "drop taxi coimbatore to guruvayur",
+    "drop taxi madurai to trichy",
+    "drop taxi madurai to chennai",
+    "drop taxi madurai contact number",
+    "drop taxi madurai reviews",
+    "drop taxi madurai photos",
+    "drop taxi madurai to bangalore",
+    "drop taxi madurai to coimbatore",
+    "drop taxi madurai to tirunelveli",
+    "drop taxi madurai price"
+  ]
+}
