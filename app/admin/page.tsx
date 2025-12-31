@@ -1,6 +1,6 @@
 import { requireAdminSession } from "@/lib/admin/session";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { createLead, updateLead } from "./actions";
+import { createLead, updateLead, logCall, bulkUpdateLeads } from "./actions";
 import styles from "./page.module.css";
 import type { Database } from "@/lib/supabase/database.types";
 
@@ -59,10 +59,63 @@ function formatDate(value: string | null | undefined) {
     return value;
 }
 
+// Lead Age Helper Functions
+function getLeadAgeDays(createdAt: string): number {
+    const created = new Date(createdAt);
+    const now = new Date();
+    return Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+function getLeadAgeClass(createdAt: string, lastContactedAt: string | null): string {
+    const ageDays = getLeadAgeDays(createdAt);
+    const daysSinceContact = lastContactedAt
+        ? Math.floor((new Date().getTime() - new Date(lastContactedAt).getTime()) / (1000 * 60 * 60 * 24))
+        : ageDays;
+
+    if (daysSinceContact <= 1) return "age-fresh";
+    if (daysSinceContact <= 3) return "age-warm";
+    return "age-stale";
+}
+
+function getLeadAgeLabel(createdAt: string): string {
+    const ageDays = getLeadAgeDays(createdAt);
+    if (ageDays === 0) return "Today";
+    if (ageDays === 1) return "1 day ago";
+    return `${ageDays} days ago`;
+}
+
+function isFollowUpDueToday(followUpAt: string | null): boolean {
+    if (!followUpAt) return false;
+    const followUp = new Date(followUpAt);
+    const now = new Date();
+    return followUp.toDateString() === now.toDateString();
+}
+
+function isFollowUpOverdue(followUpAt: string | null): boolean {
+    if (!followUpAt) return false;
+    const followUp = new Date(followUpAt);
+    const now = new Date();
+    return followUp < now && followUp.toDateString() !== now.toDateString();
+}
+
+function isPickupToday(pickupDate: string | null): boolean {
+    if (!pickupDate) return false;
+    const pickup = new Date(pickupDate);
+    const now = new Date();
+    return pickup.toDateString() === now.toDateString();
+}
+
+function isStale(lead: Lead): boolean {
+    const daysSinceContact = lead.last_contacted_at
+        ? Math.floor((new Date().getTime() - new Date(lead.last_contacted_at).getTime()) / (1000 * 60 * 60 * 24))
+        : getLeadAgeDays(lead.created_at);
+    return daysSinceContact > 7 && lead.status !== "confirmed" && lead.status !== "cancelled";
+}
+
 export default async function AdminPage({
     searchParams,
 }: {
-    searchParams?: {
+    searchParams?: Promise<{
         error?: string;
         q?: string;
         status?: string;
@@ -70,16 +123,17 @@ export default async function AdminPage({
         owner?: string;
         date?: string;
         source?: string;
-    };
+    }>;
 }) {
     const session = await requireAdminSession();
+    const params = await searchParams;
 
-    const searchQuery = (searchParams?.q ?? "").trim();
-    const statusFilter = (searchParams?.status ?? "all").trim();
-    const priorityFilter = (searchParams?.priority ?? "all").trim();
-    const ownerFilter = (searchParams?.owner ?? "").trim();
-    const dateFilter = (searchParams?.date ?? "").trim();
-    const sourceFilter = (searchParams?.source ?? "").trim();
+    const searchQuery = (params?.q ?? "").trim();
+    const statusFilter = (params?.status ?? "all").trim();
+    const priorityFilter = (params?.priority ?? "all").trim();
+    const ownerFilter = (params?.owner ?? "").trim();
+    const dateFilter = (params?.date ?? "").trim();
+    const sourceFilter = (params?.source ?? "").trim();
 
     let leads: Lead[] = [];
     let leadEvents: LeadEvent[] = [];
@@ -199,16 +253,36 @@ export default async function AdminPage({
         .sort((a, b) => b[1] - a[1])
         .slice(0, 5);
 
+    // Today's Follow-ups Panel Data
+    const urgentPickups = leads.filter(lead =>
+        isPickupToday(lead.pickup_date) && lead.status !== "confirmed" && lead.status !== "cancelled"
+    );
+    const dueToday = leads.filter(lead =>
+        isFollowUpDueToday(lead.follow_up_at) && lead.status !== "confirmed" && lead.status !== "cancelled"
+    );
+    const overdueFollowups = leads.filter(lead =>
+        isFollowUpOverdue(lead.follow_up_at) && lead.status !== "confirmed" && lead.status !== "cancelled"
+    );
+    const staleLeads = leads.filter(lead => isStale(lead));
+    const hotLeads = leads.filter(lead => lead.priority === "hot" && lead.status !== "confirmed" && lead.status !== "cancelled");
+
+    const needsAttentionCount = urgentPickups.length + dueToday.length + overdueFollowups.length;
+
     let errorMessage = "";
-    if (searchParams?.error === "update-failed") {
+    let warningMessage = "";
+    if (params?.error === "update-failed") {
         errorMessage = "Update failed. Please retry.";
-    } else if (searchParams?.error === "create-failed") {
+    } else if (params?.error === "create-failed") {
         errorMessage = "Failed to add lead. Please retry.";
-    } else if (searchParams?.error === "missing-fields") {
-        errorMessage = "Pickup, drop, and phone are required to add a lead.";
-    } else if (searchParams?.error === "missing-config") {
+    } else if (params?.error === "missing-fields") {
+        errorMessage = "From, To, and Mobile Number are required.";
+    } else if (params?.error === "missing-config") {
         errorMessage = "Missing server configuration for Supabase updates.";
-    } else if (searchParams?.error) {
+    } else if (params?.error === "duplicate") {
+        warningMessage = "⚠️ A lead with this phone number already exists! Check the existing lead before adding a duplicate.";
+    } else if (params?.error === "no-leads-selected") {
+        errorMessage = "No leads selected for bulk action.";
+    } else if (params?.error) {
         errorMessage = "Something went wrong. Please retry.";
     }
 
@@ -241,6 +315,80 @@ export default async function AdminPage({
                 {errorMessage ? (
                     <div className={styles.alert}>{errorMessage}</div>
                 ) : null}
+
+                {warningMessage ? (
+                    <div className={styles.alertWarning}>{warningMessage}</div>
+                ) : null}
+
+                {/* Today's Follow-ups Panel */}
+                {needsAttentionCount > 0 && (
+                    <section className={styles.urgentPanel}>
+                        <div className={styles.urgentHeader}>
+                            <h2 className={styles.sectionTitle}>⚡ Needs Attention ({needsAttentionCount})</h2>
+                            <p className={styles.sectionHint}>Leads requiring immediate action today</p>
+                        </div>
+                        <div className={styles.urgentGrid}>
+                            {urgentPickups.length > 0 && (
+                                <div className={styles.urgentCard}>
+                                    <span className={styles.urgentIcon}>🚗</span>
+                                    <div>
+                                        <strong>Pickup Today</strong>
+                                        <p>{urgentPickups.length} lead{urgentPickups.length > 1 ? "s" : ""}</p>
+                                        <ul className={styles.urgentList}>
+                                            {urgentPickups.slice(0, 3).map(lead => (
+                                                <li key={lead.id}>{lead.customer_name || lead.contact_phone}: {lead.pickup_location} → {lead.drop_location}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            )}
+                            {overdueFollowups.length > 0 && (
+                                <div className={`${styles.urgentCard} ${styles.urgentCardRed}`}>
+                                    <span className={styles.urgentIcon}>⏰</span>
+                                    <div>
+                                        <strong>Overdue Follow-ups</strong>
+                                        <p>{overdueFollowups.length} lead{overdueFollowups.length > 1 ? "s" : ""} past due</p>
+                                        <ul className={styles.urgentList}>
+                                            {overdueFollowups.slice(0, 3).map(lead => (
+                                                <li key={lead.id}>{lead.customer_name || lead.contact_phone}: {lead.pickup_location}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            )}
+                            {dueToday.length > 0 && (
+                                <div className={styles.urgentCard}>
+                                    <span className={styles.urgentIcon}>📞</span>
+                                    <div>
+                                        <strong>Follow-up Due Today</strong>
+                                        <p>{dueToday.length} lead{dueToday.length > 1 ? "s" : ""}</p>
+                                        <ul className={styles.urgentList}>
+                                            {dueToday.slice(0, 3).map(lead => (
+                                                <li key={lead.id}>{lead.customer_name || lead.contact_phone}: {lead.pickup_location}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </section>
+                )}
+
+                {/* Stale Leads Warning */}
+                {staleLeads.length > 0 && (
+                    <div className={styles.staleBanner}>
+                        ⚠️ {staleLeads.length} stale lead{staleLeads.length > 1 ? "s" : ""} (no contact in 7+ days) -
+                        <a href="/admin?priority=cold" className={styles.staleLink}> View cold leads</a>
+                    </div>
+                )}
+
+                {/* Hot Leads Quick Access */}
+                {hotLeads.length > 0 && (
+                    <div className={styles.hotBanner}>
+                        🔥 {hotLeads.length} hot lead{hotLeads.length > 1 ? "s" : ""} need priority attention -
+                        <a href="/admin?priority=hot" className={styles.hotLink}> View hot leads</a>
+                    </div>
+                )}
 
                 <section className={styles.filtersCard}>
                     <form method="get" action="/admin" className={styles.filtersForm}>
@@ -403,157 +551,115 @@ export default async function AdminPage({
                     <div className={styles.leadFormHeader}>
                         <h2 className={styles.sectionTitle}>Add Lead Manually</h2>
                         <p className={styles.sectionHint}>
-                            Capture phone enquiries or offline requests.
+                            Quick entry with essential fields.
                         </p>
                     </div>
                     <form className={styles.leadForm} action={createLead}>
                         <div className={styles.leadFormGrid}>
                             <label className={styles.field}>
-                                Pickup Location *
+                                Customer Name
+                                <input
+                                    name="customer_name"
+                                    type="text"
+                                    className={styles.input}
+                                    placeholder="e.g. Ravi Kumar"
+                                />
+                            </label>
+                            <label className={styles.field}>
+                                From *
                                 <input
                                     name="pickup_location"
                                     type="text"
                                     className={styles.input}
+                                    placeholder="e.g. Chennai"
                                     required
                                 />
                             </label>
                             <label className={styles.field}>
-                                Drop Location *
+                                To *
                                 <input
                                     name="drop_location"
                                     type="text"
                                     className={styles.input}
+                                    placeholder="e.g. Bangalore"
                                     required
                                 />
                             </label>
                             <label className={styles.field}>
-                                Phone *
+                                Mobile Number *
                                 <input
                                     name="contact_phone"
                                     type="tel"
                                     className={styles.input}
+                                    placeholder="e.g. 9876543210"
                                     required
                                 />
                             </label>
-                            <label className={styles.field}>
-                                Email
-                                <input
-                                    name="contact_email"
-                                    type="email"
-                                    className={styles.input}
-                                />
-                            </label>
-                            <label className={styles.field}>
-                                Trip Type
-                                <input
-                                    name="trip_type"
-                                    type="text"
-                                    list="trip-types"
-                                    className={styles.input}
-                                    placeholder="one-way"
-                                />
-                            </label>
-                            <label className={styles.field}>
-                                Pickup Date
-                                <input
-                                    name="pickup_date"
-                                    type="date"
-                                    className={styles.input}
-                                />
-                            </label>
-                            <label className={styles.field}>
-                                Pickup Time
-                                <input
-                                    name="pickup_time"
-                                    type="time"
-                                    className={styles.input}
-                                />
-                            </label>
-                            <label className={styles.field}>
-                                Status
-                                <select name="status" className={styles.select} defaultValue="new">
-                                    {STATUS_OPTIONS.map((option) => (
-                                        <option key={option.value} value={option.value}>
-                                            {option.label}
-                                        </option>
-                                    ))}
-                                </select>
-                            </label>
-                            <label className={styles.field}>
-                                Priority
-                                <select name="priority" className={styles.select} defaultValue="warm">
-                                    {PRIORITY_OPTIONS.map((option) => (
-                                        <option key={option.value} value={option.value}>
-                                            {option.label}
-                                        </option>
-                                    ))}
-                                </select>
-                            </label>
-                            <label className={styles.field}>
-                                Follow Up At
-                                <input
-                                    name="follow_up_at"
-                                    type="datetime-local"
-                                    className={styles.input}
-                                />
-                            </label>
-                            <label className={styles.field}>
-                                Reminder At
-                                <input
-                                    name="reminder_at"
-                                    type="datetime-local"
-                                    className={styles.input}
-                                />
-                            </label>
-                            <label className={styles.field}>
-                                Owner
-                                <input
-                                    name="owner_name"
-                                    type="text"
-                                    className={styles.input}
-                                    defaultValue={session.username}
-                                />
-                            </label>
-                            <label className={styles.field}>
-                                Source
-                                <input
-                                    name="source"
-                                    type="text"
-                                    className={styles.input}
-                                    defaultValue="admin"
-                                />
-                            </label>
                         </div>
-                        <label className={styles.field}>
-                            Notes
-                            <textarea
-                                name="follow_up_notes"
-                                className={styles.textarea}
-                                rows={3}
-                            />
-                        </label>
+                        <input type="hidden" name="source" value="admin" />
+                        <input type="hidden" name="status" value="new" />
+                        <input type="hidden" name="priority" value="warm" />
                         <div className={styles.leadFormActions}>
                             <button type="submit" className={styles.saveButton}>
                                 Add Lead
                             </button>
                         </div>
-                        <datalist id="trip-types">
-                            <option value="one-way" />
-                            <option value="round-trip" />
-                            <option value="airport" />
-                            <option value="outstation" />
-                        </datalist>
                     </form>
+                </section>
+
+                {/* Bulk Actions and Export Toolbar */}
+                <section className={styles.toolbarCard}>
+                    <div className={styles.toolbarLeft}>
+                        <form action={bulkUpdateLeads} className={styles.bulkForm}>
+                            <input type="hidden" name="lead_ids" id="bulk-lead-ids" value="" />
+                            <select name="bulk_action" className={styles.select}>
+                                <option value="">Bulk Action...</option>
+                                <option value="status">Change Status</option>
+                                <option value="priority">Change Priority</option>
+                                <option value="owner">Assign Owner</option>
+                            </select>
+                            <select name="bulk_value" className={styles.select}>
+                                <option value="">Select Value...</option>
+                                <optgroup label="Status">
+                                    {STATUS_OPTIONS.map(opt => (
+                                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                    ))}
+                                </optgroup>
+                                <optgroup label="Priority">
+                                    {PRIORITY_OPTIONS.map(opt => (
+                                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                    ))}
+                                </optgroup>
+                            </select>
+                            <button type="submit" className={styles.quickButton}>
+                                Apply to Selected
+                            </button>
+                        </form>
+                    </div>
+                    <div className={styles.toolbarRight}>
+                        <a
+                            href={`/admin/export?status=${statusFilter}&priority=${priorityFilter}`}
+                            className={styles.exportButton}
+                        >
+                            📥 Export CSV
+                        </a>
+                    </div>
                 </section>
 
                 <div className={styles.leadTable}>
                     <div className={styles.tableHeader}>
+                        <span>
+                            <input
+                                type="checkbox"
+                                id="select-all-leads"
+                                title="Select all leads"
+                            />
+                        </span>
                         <span>Lead</span>
                         <span>Travel Date</span>
                         <span>Contact</span>
                         <span>Status</span>
                         <span>Follow Up</span>
-                        <span>Reminder</span>
                         <span>Notes</span>
                         <span>Actions</span>
                     </div>
@@ -597,16 +703,46 @@ export default async function AdminPage({
                                 new Date(a.created_at).getTime()
                         );
 
+                        // Lead age and status indicators
+                        const ageClass = getLeadAgeClass(lead.created_at, lead.last_contacted_at);
+                        const ageLabel = getLeadAgeLabel(lead.created_at);
+                        const isLeadStale = isStale(lead);
+                        const isOverdue = isFollowUpOverdue(lead.follow_up_at);
+                        const isUrgent = isPickupToday(lead.pickup_date);
+
                         return (
-                            <div key={lead.id} className={styles.leadRowGroup}>
+                            <div key={lead.id} className={`${styles.leadRowGroup} ${isOverdue ? styles.overdueRow : ""} ${isUrgent ? styles.urgentRow : ""}`}>
                                 <form
                                     className={styles.tableRow}
                                     action={updateLead}
                                 >
                                     <input type="hidden" name="id" value={lead.id} />
 
+                                    {/* Checkbox Cell */}
+                                    <div className={styles.checkboxCell}>
+                                        <input
+                                            type="checkbox"
+                                            name="selected_lead"
+                                            value={lead.id}
+                                            className="lead-checkbox"
+                                        />
+                                    </div>
+
                                     <div className={styles.cell}>
                                         <span className={styles.cellLabel}>Lead</span>
+                                        <div className={styles.leadTitleRow}>
+                                            {/* Lead Age Badge */}
+                                            <span className={`${styles.ageBadge} ${styles[ageClass]}`} title={`Created ${ageLabel}`}>
+                                                {ageLabel}
+                                            </span>
+                                            {isLeadStale && <span className={styles.staleBadge} title="No contact in 7+ days">⚠️</span>}
+                                        </div>
+                                        {/* Customer Name */}
+                                        {lead.customer_name && (
+                                            <div className={styles.customerName}>
+                                                👤 {lead.customer_name}
+                                            </div>
+                                        )}
                                         <div className={styles.leadTitleRow}>
                                             <div className={styles.leadTitle}>
                                                 {lead.pickup_location}
@@ -620,16 +756,10 @@ export default async function AdminPage({
                                             </span>
                                         </div>
                                         <div className={styles.leadMeta}>
-                                            Trip: {lead.trip_type ?? "N/A"}
+                                            Trip: {lead.trip_type ?? "N/A"} | Owner: {lead.owner_name ?? "Unassigned"}
                                         </div>
                                         <div className={styles.leadMeta}>
-                                            Owner: {lead.owner_name ?? "Unassigned"}
-                                        </div>
-                                        <div className={styles.leadMeta}>
-                                            Last contacted: {formatTimestamp(lead.last_contacted_at)}
-                                        </div>
-                                        <div className={styles.leadMeta}>
-                                            Created: {formatTimestamp(lead.created_at)}
+                                            Calls: {lead.call_count ?? 0} | Last contact: {formatTimestamp(lead.last_contacted_at)}
                                         </div>
                                     </div>
 
@@ -762,7 +892,7 @@ export default async function AdminPage({
                                                 value="confirm"
                                                 className={styles.confirmButton}
                                             >
-                                                Mark Confirmed
+                                                ✓ Confirm
                                             </button>
                                             <button
                                                 type="submit"
@@ -770,13 +900,13 @@ export default async function AdminPage({
                                                 value="contacted"
                                                 className={styles.quickButton}
                                             >
-                                                Mark Contacted
+                                                📞 Contacted
                                             </button>
                                             <a
                                                 href={`tel:${lead.contact_phone}`}
                                                 className={styles.callButton}
                                             >
-                                                Call Now
+                                                📱 Call
                                             </a>
                                             {whatsAppUrl ? (
                                                 <a
@@ -785,15 +915,24 @@ export default async function AdminPage({
                                                     target="_blank"
                                                     rel="noreferrer"
                                                 >
-                                                    WhatsApp
+                                                    💬 WhatsApp
                                                 </a>
-                                            ) : (
-                                                <span className={styles.mutedText}>
-                                                    Phone missing
-                                                </span>
-                                            )}
+                                            ) : null}
                                         </div>
                                     </div>
+                                </form>
+                                {/* Log Call Form - separate form for quick call logging */}
+                                <form action={logCall} className={styles.logCallForm}>
+                                    <input type="hidden" name="id" value={lead.id} />
+                                    <input
+                                        type="text"
+                                        name="call_note"
+                                        placeholder="Quick call note (optional)"
+                                        className={styles.callNoteInput}
+                                    />
+                                    <button type="submit" className={styles.logCallButton}>
+                                        📝 Log Call #{(lead.call_count ?? 0) + 1}
+                                    </button>
                                 </form>
                                 <div className={styles.timelineRow}>
                                     <div className={styles.timelineHeader}>

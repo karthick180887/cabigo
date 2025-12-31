@@ -8,17 +8,18 @@ export const dynamic = "force-dynamic";
 export default async function AdminLoginPage({
     searchParams,
 }: {
-    searchParams?: { error?: string };
+    searchParams?: Promise<{ error?: string }>;
 }) {
     const session = await getAdminSession();
     if (session) {
         redirect("/admin");
     }
 
+    const params = await searchParams;
     let message = "";
-    if (searchParams?.error === "invalid") {
+    if (params?.error === "invalid") {
         message = "Invalid username or password.";
-    } else if (searchParams?.error === "missing-config") {
+    } else if (params?.error === "missing-config") {
         message = "Admin credentials are not configured yet.";
     }
 

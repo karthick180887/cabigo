@@ -250,9 +250,30 @@ export async function createLead(formData: FormData) {
     const contactPhone = String(formData.get("contact_phone") ?? "").trim();
     const contactEmailRaw = String(formData.get("contact_email") ?? "").trim();
     const contactEmail = contactEmailRaw ? contactEmailRaw : null;
+    const customerNameRaw = String(formData.get("customer_name") ?? "").trim();
+    const customerName = customerNameRaw ? customerNameRaw : null;
 
     if (!pickupLocation || !dropLocation || !contactPhone) {
         redirect("/admin?error=missing-fields");
+    }
+
+    let supabase;
+    try {
+        supabase = getSupabaseServerClient();
+    } catch (error) {
+        redirect("/admin?error=missing-config");
+    }
+
+    // Duplicate Detection: Check if phone number already exists
+    const normalizedPhone = contactPhone.replace(/\D/g, "");
+    const { data: existingLead } = await supabase
+        .from("booking_requests")
+        .select("id, customer_name, pickup_location, drop_location, status")
+        .or(`contact_phone.eq.${contactPhone},contact_phone.ilike.%${normalizedPhone}%`)
+        .maybeSingle();
+
+    if (existingLead) {
+        redirect(`/admin?error=duplicate&existing=${existingLead.id}`);
     }
 
     const tripTypeRaw = String(formData.get("trip_type") ?? "").trim();
@@ -261,8 +282,23 @@ export async function createLead(formData: FormData) {
     const pickupTime = parseTimeInput(formData.get("pickup_time"));
     const statusRaw = String(formData.get("status") ?? "new").trim().toLowerCase();
     const status = VALID_STATUSES.has(statusRaw) ? statusRaw : "new";
-    const priorityRaw = String(formData.get("priority") ?? "").trim().toLowerCase();
-    const priority = VALID_PRIORITIES.has(priorityRaw) ? priorityRaw : "warm";
+
+    // Auto-prioritization based on pickup date
+    let priorityRaw = String(formData.get("priority") ?? "").trim().toLowerCase();
+    let priority = VALID_PRIORITIES.has(priorityRaw) ? priorityRaw : "warm";
+
+    if (pickupDate) {
+        const pickupDateTime = new Date(pickupDate);
+        const now = new Date();
+        const hoursUntilPickup = (pickupDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+
+        if (hoursUntilPickup <= 24 && hoursUntilPickup > 0) {
+            priority = "hot"; // Less than 24 hours away
+        } else if (hoursUntilPickup <= 168 && hoursUntilPickup > 24) {
+            priority = "warm"; // Less than 7 days away
+        }
+    }
+
     const ownerNameRaw = String(formData.get("owner_name") ?? "").trim();
     const ownerName = ownerNameRaw ? ownerNameRaw : session.username;
     const followUpAt = parseDateTimeInput(formData.get("follow_up_at"));
@@ -271,13 +307,6 @@ export async function createLead(formData: FormData) {
     const followUpNotes = followUpNotesRaw ? followUpNotesRaw : null;
     const sourceRaw = String(formData.get("source") ?? "admin").trim();
     const source = sourceRaw ? sourceRaw : "admin";
-
-    let supabase;
-    try {
-        supabase = getSupabaseServerClient();
-    } catch (error) {
-        redirect("/admin?error=missing-config");
-    }
 
     const { data, error } = await supabase
         .from("booking_requests")
@@ -289,6 +318,7 @@ export async function createLead(formData: FormData) {
             trip_type: tripType,
             contact_phone: contactPhone,
             contact_email: contactEmail,
+            customer_name: customerName,
             source,
             status,
             priority,
@@ -308,7 +338,7 @@ export async function createLead(formData: FormData) {
         const events = [
             {
                 event_type: "created",
-                message: "Lead created manually",
+                message: `Lead created manually${customerName ? ` for ${customerName}` : ""}`,
                 created_by: session.username,
             },
         ];
@@ -322,6 +352,136 @@ export async function createLead(formData: FormData) {
         }
 
         await logLeadEvents(supabase, data.id, events);
+    }
+
+    revalidatePath("/admin");
+    redirect("/admin");
+}
+
+export async function logCall(formData: FormData) {
+    const session = await requireAdminSession();
+
+    const id = String(formData.get("id") ?? "").trim();
+    const callNote = String(formData.get("call_note") ?? "").trim();
+
+    if (!id) {
+        redirect("/admin?error=missing-id");
+    }
+
+    let supabase;
+    try {
+        supabase = getSupabaseServerClient();
+    } catch (error) {
+        redirect("/admin?error=missing-config");
+    }
+
+    const nowIso = new Date().toISOString();
+
+    // Get current call count
+    const { data: existingLead } = await supabase
+        .from("booking_requests")
+        .select("call_count")
+        .eq("id", id)
+        .maybeSingle();
+
+    const currentCallCount = existingLead?.call_count ?? 0;
+
+    // Update lead with new call info
+    const { error } = await supabase
+        .from("booking_requests")
+        .update({
+            last_contacted_at: nowIso,
+            call_count: currentCallCount + 1,
+        })
+        .eq("id", id);
+
+    if (error) {
+        redirect("/admin?error=update-failed");
+    }
+
+    // Log the call event
+    await logLeadEvents(supabase, id, [{
+        event_type: "call",
+        message: callNote || `Call #${currentCallCount + 1} logged`,
+        created_by: session.username,
+    }]);
+
+    revalidatePath("/admin");
+    redirect("/admin");
+}
+
+export async function bulkUpdateLeads(formData: FormData) {
+    const session = await requireAdminSession();
+
+    const leadIdsRaw = String(formData.get("lead_ids") ?? "").trim();
+    const action = String(formData.get("bulk_action") ?? "").trim();
+    const value = String(formData.get("bulk_value") ?? "").trim();
+
+    if (!leadIdsRaw || !action) {
+        redirect("/admin?error=missing-fields");
+    }
+
+    const leadIds = leadIdsRaw.split(",").map(id => id.trim()).filter(Boolean);
+
+    if (leadIds.length === 0) {
+        redirect("/admin?error=no-leads-selected");
+    }
+
+    let supabase;
+    try {
+        supabase = getSupabaseServerClient();
+    } catch (error) {
+        redirect("/admin?error=missing-config");
+    }
+
+    const updates: Record<string, unknown> = {};
+    let eventType = "";
+    let eventMessage = "";
+
+    switch (action) {
+        case "status":
+            if (VALID_STATUSES.has(value)) {
+                updates.status = value;
+                eventType = "status_changed";
+                eventMessage = `Bulk update: Status changed to ${value}`;
+            }
+            break;
+        case "priority":
+            if (VALID_PRIORITIES.has(value)) {
+                updates.priority = value;
+                eventType = "priority_updated";
+                eventMessage = `Bulk update: Priority changed to ${value}`;
+            }
+            break;
+        case "owner":
+            updates.owner_name = value || null;
+            eventType = "owner_updated";
+            eventMessage = value ? `Bulk update: Owner changed to ${value}` : "Bulk update: Owner cleared";
+            break;
+        default:
+            redirect("/admin?error=invalid-action");
+    }
+
+    if (Object.keys(updates).length === 0) {
+        redirect("/admin?error=invalid-value");
+    }
+
+    const { error } = await supabase
+        .from("booking_requests")
+        .update(updates)
+        .in("id", leadIds);
+
+    if (error) {
+        redirect("/admin?error=update-failed");
+    }
+
+    // Log events for each lead
+    for (const leadId of leadIds) {
+        await logLeadEvents(supabase, leadId, [{
+            event_type: eventType,
+            message: eventMessage,
+            created_by: session.username,
+        }]);
     }
 
     revalidatePath("/admin");

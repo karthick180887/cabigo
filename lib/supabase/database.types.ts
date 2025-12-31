@@ -20,6 +20,7 @@ export type Database = {
                     trip_type: string | null;
                     contact_phone: string;
                     contact_email: string | null;
+                    customer_name: string | null;
                     source: string | null;
                     referrer: string | null;
                     user_agent: string | null;
@@ -33,6 +34,7 @@ export type Database = {
                     reminder_error: string | null;
                     follow_up_notes: string | null;
                     last_contacted_at: string | null;
+                    call_count: number;
                 };
                 Insert: {
                     id?: string;
@@ -44,6 +46,7 @@ export type Database = {
                     trip_type?: string | null;
                     contact_phone: string;
                     contact_email?: string | null;
+                    customer_name?: string | null;
                     source?: string | null;
                     referrer?: string | null;
                     user_agent?: string | null;
@@ -57,6 +60,7 @@ export type Database = {
                     reminder_error?: string | null;
                     follow_up_notes?: string | null;
                     last_contacted_at?: string | null;
+                    call_count?: number;
                 };
                 Update: {
                     id?: string;
@@ -68,6 +72,7 @@ export type Database = {
                     trip_type?: string | null;
                     contact_phone?: string;
                     contact_email?: string | null;
+                    customer_name?: string | null;
                     source?: string | null;
                     referrer?: string | null;
                     user_agent?: string | null;
@@ -81,6 +86,7 @@ export type Database = {
                     reminder_error?: string | null;
                     follow_up_notes?: string | null;
                     last_contacted_at?: string | null;
+                    call_count?: number;
                 };
                 Relationships: [];
             };
