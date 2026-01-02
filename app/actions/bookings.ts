@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { sendTelegramNotification, formatBookingMessage } from "@/lib/telegram";
 
 const BOOKING_TABLE = "booking_requests";
 
@@ -75,6 +76,21 @@ export async function createBooking(formData: FormData) {
                     message: eventError.message,
                 });
             }
+
+            // Send Telegram notification
+            const telegramMessage = await formatBookingMessage({
+                pickup,
+                drop,
+                phone,
+                tripType,
+                pickupDate,
+                pickupTime,
+                source,
+            });
+
+            sendTelegramNotification(telegramMessage).catch((err) => {
+                console.warn("[createBooking] Telegram notification failed.", err);
+            });
         }
     } catch (error) {
         const fallback =

@@ -49,7 +49,7 @@ export default function VendorPrivacy() {
 
                 <div>
                     <h2 className="text-xl font-semibold mb-2 text-gray-900">5. Deleting Your Account</h2>
-                    <p>To delete your account, please contact us at admin@cabigo.in or call +91-9342374700.</p>
+                    <p>To delete your account, please contact us at cabigo.in@gmail.com or call +91-8885777222.</p>
                 </div>
 
                 <div>

@@ -70,7 +70,7 @@ export default function DriverPrivacy() {
 
                 <div>
                     <h2 className="text-xl font-semibold mb-2 text-gray-900">6. Deleting Your Account</h2>
-                    <p>Drivers can request account deletion by contacting us at admin@cabigo.in or calling +91-9342374700. Note that we may retain certain information as required by law or for legitimate business purposes.</p>
+                    <p>Drivers can request account deletion by contacting us at cabigo.in@gmail.com or calling +91-8885777222. Note that we may retain certain information as required by law or for legitimate business purposes.</p>
                 </div>
 
                 <div>

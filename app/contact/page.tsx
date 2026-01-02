@@ -119,7 +119,7 @@ export default function ContactPage() {
                                 <div>
                                     <h3>WhatsApp</h3>
                                     <a
-                                        href="https://wa.me/919876543210"
+                                        href="https://wa.me/918885777222"
                                         className={styles.infoLink}
                                         target="_blank"
                                         rel="noopener noreferrer"

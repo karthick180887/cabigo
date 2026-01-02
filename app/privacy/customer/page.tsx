@@ -51,7 +51,7 @@ export default function CustomerPrivacy() {
 
                 <div>
                     <h2 className="text-xl font-semibold mb-2 text-gray-900">5. Your Choices</h2>
-                    <p>You may update, correct, or delete information about you at any time by logging into your account. To delete your account, please contact us at admin@cabigo.in or call +91-9342374700. You may also disable location services through your device settings, though this may impact app functionality.</p>
+                    <p>You may update, correct, or delete information about you at any time by logging into your account. To delete your account, please contact us at cabigo.in@gmail.com or call +91-8885777222. You may also disable location services through your device settings, though this may impact app functionality.</p>
                 </div>
 
                 <div>

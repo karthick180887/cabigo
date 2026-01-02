@@ -1,10 +1,10 @@
 export const business = {
     name: "Cabigo",
     legalName: "Cabigo",
-    phone: "+91-1800-XXX-XXXX",
-    phoneDisplay: "1800-XXX-XXXX",
-    phoneHref: "+911800XXXXXX",
-    email: "support@cabigo.in",
+    phone: "+91-8885777222",
+    phoneDisplay: "8885-777-222",
+    phoneHref: "+918885777222",
+    email: "cabigo.in@gmail.com",
     address: {
         streetAddress: "Anna Salai",
         addressLocality: "Chennai",
